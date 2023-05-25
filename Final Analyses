@@ -1,0 +1,229 @@
+*************************************************************************************************************************************************************************
+** Descriptives - 
+	* Outcomes: 
+	mi estimate, vartable: mean systolbp
+	mi estimate, vartable: mean diastolbp	
+  
+	* Exposures:
+	mi estimate: proportion aawss_discrimevent_5cat
+	mi estimate: proportion aawss_stressevent_5cat
+	mi estimate: proportion aawss_discrimsum_5cat
+	mi estimate: proportion aawss_stresssum_6cat	
+  
+	* Covariates: 
+	mi estimate, vartable: mean age_yrs
+	mi estimate, vartable: mean neurot_avg 
+	mi estimate, vartable: mean bmi
+	mi estimate: proportion bmi_dichot
+	mi estimate: proportion cvmeds_current
+	mi estimate: proportion smoke_now
+	mi estimate: proportion alcohuse
+	mi estimate: proportion hlth_ins
+	mi estimate: proportion employ_dichot
+	mi estimate: proportion educ_dichot
+	mi estimate: proportion not_partnered	
+	mi estimate: proportion pov
+  
+*************************************************************************************************************************************************************************
+** Histograms for Stress Events and Appraisal Scales --
+	mi estimate: proportion aawss_discrimevent_5cat
+	mi estimate: proportion aawss_discrimsum_6cat
+	mi estimate: proportion aawss_stressevent_5cat
+	mi estimate: proportion aawss_stresssum_6cat
+
+*************************************************************************************************************************************************************************
+** Bivariate Comparisons for Stress Scales --
+	* Discrimination
+	mi estimate: regres aawss_discrimevent_5cat aawss_discrimsum_5cat
+  
+	* General Stress
+	mi estimate: regres aawss_stressevent_5cat aawss_stresssum_6cat	
+  
+	* Discrimination and General Stress
+	mi estimate: regres aawss_discrimsum_5cat aawss_stresssum_6cat	
+
+*************************************************************************************************************************************************************************
+** Systolic and Diastolic Blood Pressure Histograms --
+** systolic 
+mi xeq: generate hist_systolic = . 
+	mi xeq: replace hist_systolic = 1 if systolbp <= 100
+	mi xeq: replace hist_systolic = 2 if systolbp > 100	& systolbp <= 110
+	mi xeq: replace hist_systolic = 3 if systolbp > 110	& systolbp <= 120
+	mi xeq: replace hist_systolic = 4 if systolbp > 120	& systolbp <= 130
+	mi xeq: replace hist_systolic = 5 if systolbp > 130	& systolbp <= 140
+	mi xeq: replace hist_systolic = 6 if systolbp > 140	& systolbp <= 150
+	mi xeq: replace hist_systolic = 7 if systolbp > 150	& systolbp <= 160
+	mi xeq: replace hist_systolic = 8 if systolbp > 160	& systolbp <= 170
+	mi xeq: replace hist_systolic = 9 if systolbp > 170	& systolbp <= 180
+	mi xeq: replace hist_systolic = 10 if systolbp > 180
+	
+mi estimate: proportion hist_systolic if cvmeds_current == 0 
+mi estimate: proportion hist_systolic if cvmeds_current == 1 
+
+** diastolic 
+mi xeq: generate hist_diastolic = . 
+	mi xeq: replace hist_diastolic = 1 if diastolbp <= 70
+	mi xeq: replace hist_diastolic = 2 if diastolbp > 70	& diastolbp <= 75
+	mi xeq: replace hist_diastolic = 3 if diastolbp > 75	& diastolbp <= 80
+	mi xeq: replace hist_diastolic = 4 if diastolbp > 80	& diastolbp <= 85
+	mi xeq: replace hist_diastolic = 5 if diastolbp > 85	& diastolbp <= 90
+	mi xeq: replace hist_diastolic = 6 if diastolbp > 90	& diastolbp <= 95
+	mi xeq: replace hist_diastolic = 7 if diastolbp > 95	& diastolbp <= 100
+	mi xeq: replace hist_diastolic = 8 if diastolbp > 100	& diastolbp <= 105
+	mi xeq: replace hist_diastolic = 9 if diastolbp > 105	& diastolbp <= 110
+	mi xeq: replace hist_diastolic = 10 if diastolbp > 110
+	
+mi estimate: proportion hist_diastolic if cvmeds_current == 0 
+mi estimate: proportion hist_diastolic if cvmeds_current == 1 
+
+*************************************************************************************************************************************************************************
+** Final Models - 
+* Stress Event Models
+	* Systolic BP
+	** without mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_stressevent_5cat educ_dichot not_partnered cvmeds_current pov age_yrs
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimevent_5cat educ_dichot not_partnered cvmeds_current pov age_yrs
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_stressevent_5cat ib3.aawss_discrimevent_5cat educ_dichot ///
+		not_partnered cvmeds_current pov age_yrs
+    
+	** with mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_stressevent_5cat educ_dichot not_partnered cvmeds_current pov ///
+		age_yrs smoke_now alcohuse bmi_dichot
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimevent_5cat educ_dichot not_partnered cvmeds_current pov ///
+		age_yrs smoke_now alcohuse bmi_dichot
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimevent_5cat ib3.aawss_stressevent_5cat educ_dichot ///
+		not_partnered cvmeds_current pov age_yrs smoke_now alcohuse bmi_dichot
+    
+	* Diastolic BP
+	** without mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_stressevent_5cat educ_dichot not_partnered cvmeds_current pov age_yrs
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimevent_5cat educ_dichot not_partnered cvmeds_current pov age_yrs
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_stressevent_5cat ib3.aawss_discrimevent_5cat educ_dichot ///
+		not_partnered cvmeds_current pov age_yrs
+    
+	** with mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_stressevent_5cat educ_dichot not_partnered cvmeds_current pov ///
+		age_yrs smoke_now alcohuse bmi_dichot
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimevent_5cat educ_dichot not_partnered cvmeds_current pov ///
+		age_yrs smoke_now alcohuse bmi_dichot
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimevent_5cat ib3.aawss_stressevent_5cat educ_dichot ///
+		not_partnered cvmeds_current pov age_yrs smoke_now alcohuse bmi_dichot
+    
+  * Distress Models
+	* Systolic BP
+	** without mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib4.aawss_stresssum_6cat educ_dichot not_partnered cvmeds_current pov age_yrs
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimsum_5cat educ_dichot not_partnered cvmeds_current pov age_yrs
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimsum_5cat ib4.aawss_stresssum_6cat educ_dichot not_partnered ///
+		cvmeds_current pov age_yrs	
+    
+	** with mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib4.aawss_stresssum_6cat educ_dichot not_partnered cvmeds_current pov age_yrs ///
+		smoke_now alcohuse bmi_dichot
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimsum_5cat educ_dichot not_partnered cvmeds_current pov age_yrs ///
+		smoke_now alcohuse bmi_dichot
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimsum_5cat ib4.aawss_stresssum_6cat educ_dichot not_partnered ///
+		cvmeds_current pov age_yrs smoke_now alcohuse bmi_dichot
+    
+	* Diastolic BP 
+	** without mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib4.aawss_stresssum_6cat educ_dichot not_partnered cvmeds_current pov age_yrs
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimsum_5cat educ_dichot not_partnered cvmeds_current pov age_yrs
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimsum_5cat ib4.aawss_stresssum_6cat educ_dichot not_partnered ///
+		cvmeds_current pov age_yrs
+    
+	** with mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib4.aawss_stresssum_6cat educ_dichot not_partnered cvmeds_current pov age_yrs///
+		smoke_now alcohuse bmi_dichot
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimsum_5cat educ_dichot not_partnered cvmeds_current pov age_yrs///
+		smoke_now alcohuse bmi_dichot	
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimsum_5cat ib4.aawss_stresssum_6cat educ_dichot not_partnered///
+		cvmeds_current pov age_yrs smoke_now alcohuse bmi_dichot
+    
+*************************************************************************************************************************************************************************
+** Predictions (Figure 2)--
+* Stress Appraisal 
+** SBP 
+	regres systolbp ib3.aawss_discrimsum_5cat ib4.aawss_stresssum_6cat educ_dichot not_partnered cvmeds_current pov age_yrs if _mi_m == 0
+	margins aawss_discrimsum_5cat, predict(xb) 
+	margins aawss_stresssum_6cat, predict(xb)
+	
+** DBP 
+	regres diastolbp ib3.aawss_discrimsum_5cat ib4.aawss_stresssum_6cat educ_dichot not_partnered cvmeds_current pov age_yrs if _mi_m == 0
+	margins aawss_discrimsum_5cat, predict(xb) 
+	margins aawss_stresssum_6cat, predict(xb)
+
+*************************************************************************************************************************************************************************
+** Sensivity Analyses --
+** Final models without CV Meds Participants **
+	tabstat systolbp, by(cvmeds_current) statistics(n mean sd min max)
+	tabstat diastolbp, by(cvmeds_current) statistics(n mean sd min max)
+  
+* Stress Event Models
+	* Systolic BP
+	** without mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_stressevent_5cat educ_dichot not_partnered pov age_yrs neurot_avg if ///
+		cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimevent_5cat educ_dichot not_partnered pov age_yrs neurot_avg if ///
+		cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimevent_5cat ib3.aawss_stressevent_5cat educ_dichot ///
+		not_partnered age_yrs neurot_avg if cvmeds_current == 0
+    
+	** with mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_stressevent_5cat educ_dichot not_partnered pov age_yrs smoke_now ///
+		alcohuse bmi_dichot if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimevent_5cat educ_dichot not_partnered pov age_yrs smoke_now ///
+		alcohuse bmi_dichot if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimevent_5cat ib3.aawss_stressevent_5cat educ_dichot not_partnered ///
+		pov age_yrs smoke_now alcohuse bmi_dichot if cvmeds_current == 0
+    
+	* Diastolic BP
+	** without mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_stressevent_5cat educ_dichot not_partnered pov age_yrs ///
+		neurot_avg if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimevent_5cat educ_dichot not_partnered pov age_yrs ///
+		neurot_avg if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimevent_5cat ib3.aawss_stressevent_5cat educ_dichot ///
+		not_partnered pov age_yrs neurot_avg if cvmeds_current == 0
+    
+	** with mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_stressevent_5cat educ_dichot not_partnered pov age_yrs ///
+		neurot_avg smoke_now alcohuse bmi_dichot if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimevent_5cat educ_dichot not_partnered pov age_yrs ///
+		neurot_avg smoke_now alcohuse bmi_dichot if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimevent_5cat ib3.aawss_stressevent_5cat educ_dichot ///
+		not_partnered pov age_yrs neurot_avg smoke_now alcohuse bmi_dichot if cvmeds_current == 0
+    
+* Distress Models
+	* Systolic BP
+	** without mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_stresssum_6cat educ_dichot not_partnered pov age_yrs ///
+		neurot_avg if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimsum_5cat educ_dichot not_partnered pov age_yrs ///
+		neurot_avg if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimsum_5cat ib3.aawss_stresssum_6cat educ_dichot not_partnered ///
+		pov age_yrs neurot_avg if cvmeds_current == 0
+    
+	** with mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_stresssum_6cat educ_dichot not_partnered pov age_yrs smoke_now ///
+		alcohuse bmi_dichot if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimsum_5cat educ_dichot not_partnered pov age_yrs smoke_now ///
+		alcohuse bmi_dichot if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres systolbp ib3.aawss_discrimsum_5cat ib3.aawss_stresssum_6cat educ_dichot not_partnered ///
+		pov age_yrs smoke_now alcohuse bmi_dichot if cvmeds_current == 0
+    
+	* Diastolic BP 
+	** without mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_stresssum_6cat educ_dichot not_partnered pov age_yrs neurot_avg ///
+		if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimsum_5cat educ_dichot not_partnered pov age_yrs neurot_avg ///
+		if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimsum_5cat ib3.aawss_stresssum_6cat educ_dichot not_partnered ///
+		pov age_yrs neurot_avg if cvmeds_current == 0
+	** with mediators
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_stresssum_6cat educ_dichot not_partnered pov age_yrs neurot_avg ///
+		smoke_now alcohuse bmi_dichot if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimsum_5cat educ_dichot not_partnered pov age_yrs ///
+		neurot_avg smoke_now alcohuse bmi_dichot if cvmeds_current == 0
+	mi estimate, dots mcerror citable dftable ufmitest esampvaryok: regres diastolbp ib3.aawss_discrimsum_5cat ib3.aawss_stresssum_6cat educ_dichot not_partnered ///
+		pov age_yrs neurot_avg smoke_now alcohuse bmi_dichot if cvmeds_current == 0
